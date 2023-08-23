@@ -4,20 +4,20 @@ from ...registerFlow.rootApp.models import SwiftUser
 
 # Create your models here.
 class Ride(models.Model):
-    ride_id = models.AutoField(primary_key=True)
+    ride_id = models.AutoField(primary_key=True,read_only=True)
     
     # exisiting information
-    rider_id = models.ForeignKey(SwiftUser, on_delete=models.CASCADE)
-    taker_id = models.ForeignKey(SwiftUser, on_delete=models.CASCADE)
+    driver = models.ForeignKey(SwiftUser, on_delete=models.CASCADE)
+    rider = models.ForeignKey(SwiftUser, on_delete=models.CASCADE)
 
     # common existing information , selected in booking flow ?
-    college_name = models.ForeignKey(SwiftUser,on_delete=models.CASCADE)
+    college_name = driver['collegeName']
 
     # location of taker and rider 
-    rider_home_location = models.ForeignKey(SwiftUser,on_delete=models.CASCADE)
-    taker_home_location = models.ForeignKey(SwiftUser,on_delete=models.CASCADE)
-
+    rider_home_location = driver['home_location']
+    taker_home_location = rider['home_location']
+    
     # ask user to input
-    arrival_time = models.DateTimeField(auto_now_add=True)
-    departure_time = models.DateTimeField(auto_now_add=True)
+    arrival_time = models.DateTimeField()
+    departure_time = models.DateTimeField()
 

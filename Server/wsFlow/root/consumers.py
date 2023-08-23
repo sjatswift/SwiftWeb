@@ -1,13 +1,19 @@
 from djangochannelsrestframework.generics import AsyncAPIConsumer
 from   djangochannelsrestframework.decorators import action
-from djangochannelsrestframework.mixins import CreateModelMixin
+from djangochannelsrestframework.mixins import CreateModelMixin,ListModelMixin
 
 from .serializers import RideSerializer
 from .models import Ride,Message
-from registerform.models import SwiftUser
+from ...registerFlow.rootApp.models import SwiftUser
 import json
 
+
+# permissions
+from rest_framework.permissions import IsAuthenticated
+from ...registerFlow.rootApp.permissions import IsTaker
+
 class flowConsumer(CreateModelMixin,AsyncAPIConsumer):
+    # permission_classes = (IsAuthenticated,IsTaker)
     queryset = Ride.objects.all()
     serializer_class = RideSerializer
 
@@ -85,12 +91,17 @@ class flowConsumer(CreateModelMixin,AsyncAPIConsumer):
             pass
 
 
-    @action
-    def handle_show_drivers(self, data):
-        collegeName = data.get('collegeName')
-        users = SwiftUser.objects.filter(collegeName=collegeName)
+    # @action
+    # def handle_show_drivers(self, data):
+    #     collegeName = data.get('collegeName')
+    #     users = SwiftUser.objects.filter(collegeName=collegeName)
 
-        self.send_group_message({
-            'type': 'show_drivers',
-            'driverlist': users,
-        })
+    #     self.send_group_message({
+    #         'type': 'show_drivers',
+    #         'driverlist': users,
+    #     })
+
+class ShowDriversList(ListModelMixin,AsyncAPIConsumer):
+    permission_classes = (IsTaker)
+    collegeName = data.get('collegeName') # how do i get data in list model mixin 
+    queryset = SwiftUser.objects.filter(role='Ride Giver', collegeName=collegeName)

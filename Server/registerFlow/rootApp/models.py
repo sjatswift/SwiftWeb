@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser,PermissionsMixin
 from phonenumber_field.modelfields import PhoneNumberField
 
+
+from uuid import uuid4
 # Create your models here.
 
 GENDER_CHOICES = (
@@ -25,9 +27,12 @@ ROLE_CHOICES = (
 )
 
 class SwiftUser(AbstractUser, PermissionsMixin):
+    user_id = models.UUIDField(default=uuid4)
+    
     name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     
+
     # Phone number field , uses international standard to maintain uniformity
     phone = PhoneNumberField(unique=True,blank = True)
     
@@ -36,7 +41,7 @@ class SwiftUser(AbstractUser, PermissionsMixin):
     dob = models.DateField(null=True, blank=True)
    
     # picture based fields
-    id_card_pic = models.ImageField(upload_to='id_card_pics/')
+    id_card_pic = models.ImageField(upload_to='media/id_card_pics/')
     profile_pic = models.ImageField(upload_to='media/profile_pics/')
     license_pic = models.ImageField(upload_to='media/license_pics/')
     
