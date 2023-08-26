@@ -13,7 +13,6 @@ from rest_framework.permissions import IsAuthenticated
 from ...registerFlow.rootApp.permissions import IsTaker
 
 class flowConsumer(CreateModelMixin,AsyncAPIConsumer):
-    # permission_classes = (IsAuthenticated,IsTaker)
     queryset = Ride.objects.all()
     serializer_class = RideSerializer
 
@@ -32,19 +31,7 @@ class flowConsumer(CreateModelMixin,AsyncAPIConsumer):
         if message_type == 'show_drivers':
             self.handle_show_drivers(json_data)
 
-        if message_type == 'book_ride':
-            self.book_ride(**json_data)
-
-    # @action
-    # def book_ride(self):
-
-    #     self.channel_layer.group_add(
-    #         self.room_group_name,
-    #         self.channel_name
-    #     )
-
             
-    @action
     def handle_location_update(self, data):
         latitude = data.get('latitude')
         longitude = data.get('longitude')
@@ -55,7 +42,7 @@ class flowConsumer(CreateModelMixin,AsyncAPIConsumer):
             'longitude': longitude,
         })
     
-    @action
+
     def handle_message_update(self, data):
         room_id = data.get('room_id')
         message_text = data.get('message_text')
@@ -91,17 +78,13 @@ class flowConsumer(CreateModelMixin,AsyncAPIConsumer):
             pass
 
 
-    # @action
-    # def handle_show_drivers(self, data):
-    #     collegeName = data.get('collegeName')
-    #     users = SwiftUser.objects.filter(collegeName=collegeName)
+    def handle_show_drivers(self, data):
+        permission_classes = [IsTaker]
+        collegeName = data.get('collegeName')
+        users = SwiftUser.objects.filter(collegeName=collegeName)
 
-    #     self.send_group_message({
-    #         'type': 'show_drivers',
-    #         'driverlist': users,
-    #     })
+        self.send_group_message({
+            'type': 'show_drivers',
+            'driverlist': users,
+        })
 
-class ShowDriversList(ListModelMixin,AsyncAPIConsumer):
-    permission_classes = (IsTaker)
-    collegeName = data.get('collegeName') # how do i get data in list model mixin 
-    queryset = SwiftUser.objects.filter(role='Ride Giver', collegeName=collegeName)

@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Message,Ride
-from ...registerFlow.rootApp.models import SwiftUser
+from .models import Ride
+from rootApp.models import SwiftUser
 
 
-class MessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Message
-        exclude = ('time_sent')
+# class MessageSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Message
+#         exclude = ('time_sent')
 
 class RideSerializer(serializers.ModelSerializer):
     class Meta:

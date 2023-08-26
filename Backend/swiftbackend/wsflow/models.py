@@ -1,17 +1,17 @@
 from django.db import models
-from ...registerFlow.rootApp.models import SwiftUser
+from rootApp.models import SwiftUser
 
 
 # Create your models here.
 class Ride(models.Model):
-    ride_id = models.AutoField(primary_key=True,read_only=True)
+    ride_id = models.AutoField(primary_key=True)
     
     # exisiting information
-    driver = models.ForeignKey(SwiftUser, on_delete=models.CASCADE)
-    rider = models.ForeignKey(SwiftUser, on_delete=models.CASCADE)
+    driver = models.ForeignKey(SwiftUser, related_name = 'driver' ,on_delete=models.CASCADE)
+    rider = models.ForeignKey(SwiftUser, related_name='taker' ,on_delete=models.CASCADE)
 
     # common existing information , selected in booking flow ?
-    college_name = models.ForeignKey(SwiftUser, on_delete=models.CASCADE)
+    collegename = models.ForeignKey(SwiftUser, on_delete=models.CASCADE)
 
     # Location of rider and taker
     rider_home_location = models.JSONField()  
